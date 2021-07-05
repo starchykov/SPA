@@ -1,10 +1,11 @@
 const multer = require('multer');
 const path = require('path');
+const ApiError = require('../exceptions/api_error')
+
 
 const storage = multer.diskStorage({
 
     destination: (request, file, callback) => {
-        console.log(request);
         callback(null, path.resolve(`./uploads`))
     },
     filename: (request, file, callback) => {
@@ -14,7 +15,7 @@ const storage = multer.diskStorage({
 
 const fileFilter = (request, file, callback) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') callback(null, true)
-    else callback(new Error('Unsupported type'), false)
+    else callback(ApiError.BadRequest(`Unsupported file type. The file was not uploaded.`), false)
 }
 
 const upload = multer({storage: storage, limits: {fileSize: 1024 * 1024 * 10}, fileFilter})
