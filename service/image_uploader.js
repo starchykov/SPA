@@ -4,7 +4,6 @@ const path = require('path');
 const storage = multer.diskStorage({
 
     destination: (request, file, callback) => {
-        console.log(__dirname);
         callback(null, path.resolve(`./uploads`))
     },
     filename: (request, file, callback) => {
@@ -13,7 +12,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (request, file, callback) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') callback(null, true)
+    if (file.mimetype === 'image/jpg' || file.mimetype === 'image/png') callback(null, true)
     else callback(new Error('Unsupported type'), false)
 }
 
