@@ -26,7 +26,7 @@ const imageRouter = require('./routes/images_route')
 app.use('/users', usersRouter)
 app.use('/posts', postsRoute)
 app.use('/images', imageRouter)
-app.use('/uploads', express.static('uploads'))
+app.use('/uploads', express.static(__dirname + '/uploads'))
 
 // Middleware for errors catching
 app.use(errorMiddleware)
