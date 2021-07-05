@@ -26,10 +26,10 @@ _____________________________________________________________________
 **Additional params for connecting in config.json**  <br>
 _`"protocol": "postgres", "dialectOptions": {"ssl": {"require": true, "rejectUnauthorized": false}},"operatorsAliases": 0`_
 
-**Connection string to Heroku database** <br>
-**`password:`** `ae8834f9146ed515cfc4ca1a3cbb9e9b654ee27db556d9035d6342f37f5b176d` 
+**Connection string to database** <br>
+**`password:`** `'password string'` 
 
-**`connection string:`** `jdbc:postgresql://ec2-52-5-247-46.compute-1.amazonaws.com:5432/d7aa72melijb0h`
+**`connection string:`** `'connection_string'`
 
 **Init sequelize cli to create fiels and folders structure** <br>
 `npx sequelize-cli init`
