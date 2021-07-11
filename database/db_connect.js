@@ -1,4 +1,5 @@
 const {Sequelize} = require('sequelize');
+const {Pool} = require('pg');
 
 const sequelize = new Sequelize({
     username: process.env.DB_USERNAME,
@@ -12,5 +13,9 @@ const sequelize = new Sequelize({
     dialectOptions: {"ssl": {"require": true, "rejectUnauthorized": false}}, "operatorsAliases": 0
 })
 
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {rejectUnauthorized: false}
+});
 
-module.exports = sequelize
+module.exports = {Sequelize: sequelize, pool: pool}
