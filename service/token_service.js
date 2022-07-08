@@ -21,13 +21,13 @@ class TokenService {
     // Validate access token wia incoming params
     async validateAccessToken(accessToken) {
         // Return data about user from token
-        return await jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN);
+        return jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN);
     }
 
     // Validate refresh token wia incoming credentials
     async validateRefreshToken(refreshToken) {
         // Return data about user from token
-        return await jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN);
+        return jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN);
     }
 
     // Find user with common token from incoming params
