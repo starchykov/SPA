@@ -24,7 +24,7 @@ class UserService {
         await mailService.sendActivationMail(email, `${process.env.API_URL}/users/activation/${activationLink}`);
         // Set user data from database to data transfer object for generate token
         const userDto = new UserDto(user)
-        const tokens = await tokenService.generateTokens({...userDto});
+        const tokens = tokenService.generateTokens({...userDto});
         //Save refresh token to database
         await tokenService.saveToken(userDto.id, tokens.refreshToken.toString());
         // Return tokens and user data to user controller
@@ -53,7 +53,7 @@ class UserService {
         if (!isPasswordEqual) throw ApiError.BadRequest('Invalid credentials');
         // If passwords equal create user object and generate access and refresh tokens
         const userDto = new UserDto(user);
-        const tokens = await tokenService.generateTokens({...userDto});
+        const tokens = tokenService.generateTokens({...userDto});
         //Save refresh token to database
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
         // Return tokens and user data to user controller
@@ -74,7 +74,7 @@ class UserService {
         const user = await Users.findOne({where: {id: userData.id}})
         // Set actual user data to data transfer object and generate access and refresh tokens
         const userDto = new UserDto(user);
-        const tokens = await tokenService.generateTokens({...userDto});
+        const tokens = tokenService.generateTokens({...userDto});
         //Save refresh token to database
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
         // Return tokens and user data to user controller
