@@ -17,7 +17,7 @@
     "url": "https://github.com/starchykov/spa_server/issues"
   },
   "homepage": "https://github.com/starchykov/spa_server#readme",
-  "devdependencies": {
+  "devDependencies": {
     "nodemon": "^2.0.7"
   },
   "dependencies": {
