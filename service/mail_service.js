@@ -13,7 +13,7 @@ class MailService {
 
     }
 
-    // Send email letter using transporter credentials
+    // Send confirmation email letter using transporter credentials
     async sendActivationMail(mail, link) {
         await this.transporter.sendMail({
             from: process.env.SMTP_USER,
@@ -24,6 +24,17 @@ class MailService {
         }).then(result => console.log(result.response)).catch(error => console.log(error.response))
     }
 
+    // Send confirmation email letter using transporter credentials
+    async sendInformationMail(mail, userName) {
+        let message = 'System has detected a user currently working under you credentials!';
+        await this.transporter.sendMail({
+            from: process.env.SMTP_USER,
+            to: mail,
+            subject: `SPA SERVER notification on ${process.env.API_URL}`,
+            text: ' ',
+            html: `<div><br/><p>Hi ${userName}!</p><br><p>${message}</p><br><p>SPA SERVER Developer Team</p></div>`
+        }).then(result => console.log(result.response)).catch(error => console.log(error.response))
+    }
 }
 
 module.exports = new MailService();

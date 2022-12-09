@@ -56,6 +56,8 @@ class UserService {
         const tokens = tokenService.generateTokens({...userDto});
         //Save refresh token to database
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
+        // Send information to the user email
+        await mailService.sendInformationMail(email, `${user.name}`);
         // Return tokens and user data to user controller
         return {tokens, user: userDto}
     }
