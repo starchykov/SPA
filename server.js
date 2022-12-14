@@ -12,28 +12,6 @@ const server = http.createServer(app);
 // Create socket connection for the server app
 const io = new Server(server);
 
-// const messages = []
-// io.on('connection', (socket) => {
-//     const username = socket.handshake.query.username
-//
-//     socket.on('message', (data) => {
-//         const message = {
-//             message: data.message,
-//             senderUsername: username,
-//             sentAt: Date.now()
-//         };
-//         messages.push(message)
-//         io.emit('message', message)
-//
-//     });
-//
-//     socket.on("audioMessage", (msg) => {
-//         io.emit("audioMessage", msg);
-//         console.log(msg)
-//     });
-//
-// });
-
 /// Define service data for new connections
 let userCounter = 0;
 let usersOnline = [];
@@ -42,17 +20,30 @@ let username = '';
 //  Listen new socket connections
 io.on('connection', (socket) => {
 
+    /// Update service information when new connection detected
     userCounter = userCounter + 1;
     username = socket.handshake.query.username
     usersOnline.push(username)
 
-    io.emit('user', userCounter);
+    io.emit('socketUpdates', userCounter);
     console.log(`a ${username} user is connected`);
 
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
+        console.log(socket)
         userCounter = userCounter - 1;
-        io.emit('user', userCounter);
-        console.log('user disconnected');
+        usersOnline = usersOnline.filter((user) => user !== username);
+        io.emit('socketUpdates', userCounter);
+        console.log(`user ${username} disconnected`);
+    });
+
+    socket.on('message', (data) => {
+        const message = {
+            message: data.message,
+            senderUsername: username,
+            sentAt: Date.now()
+        };
+        messages.push(message)
+        io.emit('message', message)
     });
 
     socket.on("audioMessage", (msg) => {
