@@ -122,7 +122,7 @@
         await audio.play();
     });
 
-    socket.on('user', function (usercount) {
+    socket.on('socketUpdates', function (usercount) {
         $('.usercount').text(usercount)
     });
 

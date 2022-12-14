@@ -25,11 +25,10 @@ io.on('connection', (socket) => {
     username = socket.handshake.query.username
     usersOnline.push(username)
 
-    io.emit('socketUpdates', userCounter);
+    io.emit('socketUpdates', {'userCounter': userCounter, 'usersOnline': usersOnline});
     console.log(`a ${username} user is connected`);
 
     socket.on('disconnect', () => {
-        console.log(socket)
         userCounter = userCounter - 1;
         usersOnline = usersOnline.filter((user) => user !== username);
         io.emit('socketUpdates', userCounter);
@@ -42,11 +41,11 @@ io.on('connection', (socket) => {
             senderUsername: username,
             sentAt: Date.now()
         };
-        messages.push(message)
+        // messages.push(message)
         io.emit('message', message)
     });
 
-    socket.on("audioMessage", (msg) => {
+    socket.on('audioMessage', (msg) => {
         io.emit("audioMessage", msg);
         console.log(msg)
     });
