@@ -15,30 +15,31 @@ const io = new Server(server);
 /// Define service data for new connections
 let userCounter = 0;
 let usersOnline = [];
-let username = '';
+let user = {userName: '', userCode: ''};
 
 //  Listen new socket connections
 io.on('connection', (socket) => {
 
     /// Update service information when new connection detected
-    userCounter = userCounter + 1;
-    username = socket.handshake.query.username
-    usersOnline.push(username)
+    user = socket.handshake.query;
+    usersOnline.push(user);
+    userCounter = usersOnline.length;
 
     io.emit('socketUpdates', {'userCounter': userCounter, 'usersOnline': usersOnline});
-    console.log(`a ${username} user is connected`);
+    console.log(`a ${user.userName} user is connected`);
 
     socket.on('disconnect', () => {
-        userCounter = userCounter - 1;
-        usersOnline = usersOnline.filter((user) => user !== username);
-        io.emit('socketUpdates', userCounter);
-        console.log(`user ${username} disconnected`);
+
+        usersOnline = usersOnline.filter((user) => user.userCode !== user.userCode);
+        userCounter = usersOnline.length;
+        io.emit('socketUpdates', {'userCounter': userCounter, 'usersOnline': usersOnline});
+        console.log(`user ${user.userName} disconnected`);
     });
 
     socket.on('message', (data) => {
         const message = {
             message: data.message,
-            senderUsername: username,
+            senderUsername: user.userName,
             sentAt: Date.now()
         };
         // messages.push(message)
