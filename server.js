@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
     console.log(`a ${user.userName} user is connected`);
 
     socket.on('disconnect', () => {
-
+        user = socket.handshake.query;
         usersOnline = usersOnline.filter((onlineUser) => onlineUser.userCode !== user.userCode);
         userCounter = usersOnline.length;
         io.emit('socketUpdates', {'userCounter': userCounter, 'usersOnline': usersOnline});
@@ -37,6 +37,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('message', (data) => {
+        user = socket.handshake.query;
         const message = {
             message: data.message,
             senderUsername: user.userName,
@@ -47,6 +48,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('audioMessage', (msg) => {
+        user = socket.handshake.query;
         io.emit("audioMessage", msg);
         console.log(msg)
     });
