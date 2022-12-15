@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
 
-        usersOnline = usersOnline.filter((user) => user.userCode !== user.userCode);
+        usersOnline = usersOnline.filter((onlineUser) => onlineUser.userCode !== user.userCode);
         userCounter = usersOnline.length;
         io.emit('socketUpdates', {'userCounter': userCounter, 'usersOnline': usersOnline});
         console.log(`user ${user.userName} disconnected`);
