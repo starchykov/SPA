@@ -23,6 +23,7 @@ class ScheduleController {
         let events = [];
         data.forEach((el) => {
             const eDate = this._strToDate(`${el.coupleDate} ${el.coupleTime}:00`);
+
             events.push({
                 uid: `${el.coupeNumber + eDate.toISOString()}`,
                 title: el.coupleDescription,
@@ -31,7 +32,7 @@ class ScheduleController {
                 url: 'https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700&group=5750',
                 geo: {lat: 37.774703, lon: -122.432642, radius: 20},
                 categories: ['event'],
-                start: [eDate.getFullYear(), eDate.getMonth() + 1, eDate.getDate(), eDate.getHours(), eDate.getMinutes(), 0],
+                start: [eDate.getFullYear(), eDate.getMonth() + 1, eDate.getDate(), eDate.getHours() + 2, eDate.getMinutes()],
                 duration: {hours: 1, minutes: 20},
                 status: 'CONFIRMED',
                 productId: 'GENERATOR',
@@ -93,7 +94,7 @@ class ScheduleController {
         let date = dtStr.split(' ');
         let dateParts = date[0].split('.');
         let timeParts = date[1];
-        return new Date(`${dateParts[1]}/${dateParts[0]}/${dateParts[2]} ${timeParts}`);
+        return new Date(`${dateParts[1]}/${dateParts[0]}/${dateParts[2]} ${timeParts} GMT+0200`);
     }
 
 }
