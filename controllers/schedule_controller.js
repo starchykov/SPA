@@ -17,25 +17,23 @@ class ScheduleController {
     /// Get schedule STREAM ICS data parsed from HTML page from request parameters.
     getScheduleStream = async (request, response) => {
 
-
         const url = 'https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700&group=5750';
         const data = await this._parseSchedulePage(url);
+
         let events = [];
         data.forEach((el) => {
-            const inputDate = this._strToDate(`${el.coupleDate} ${el.coupleTime}:00`);
-            const date = new Date(inputDate);
+            const eDate = this._strToDate(`${el.coupleDate} ${el.coupleTime}:00`);
             events.push({
-                uid: `${el.coupeNumber + date.toISOString()}`,
+                uid: `${el.coupeNumber + eDate.toISOString()}`,
                 title: el.coupleDescription,
                 description: el.coupleDescription,
                 location: 'V. N. Karazin Kharkiv National University, Kharkiv, UA',
                 url: 'https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700&group=5750',
                 geo: {lat: 37.774703, lon: -122.432642, radius: 20},
                 categories: ['event'],
-                start: [date.getFullYear(), date.getMonth(), date.getDay(), date.getHours(), date.getMinutes()],
+                start: [eDate.getFullYear(), eDate.getMonth() + 1, eDate.getDate(), eDate.getHours(), eDate.getMinutes(), 0],
                 duration: {hours: 1, minutes: 20},
                 status: 'CONFIRMED',
-                sequence: 1,
                 productId: 'GENERATOR',
             })
         });
@@ -60,22 +58,22 @@ class ScheduleController {
 
             /// Schedule date
             const date = $(elem).closest('div.col-md-6').find('h4').text().split(' ')[0];
-            console.log("Couple data: " + date)
+            //console.log("Couple data: " + date)
 
             /// Schedule row
             const row = $(elem).closest('tr');
 
             /// Schedule row item number
             const rowItemNumber = $(row).children()[0];
-            console.log("Couple number: " + rowItemNumber.children[0].data)
+            //console.log("Couple number: " + rowItemNumber.children[0].data)
 
             /// Schedule row item number
             const rowItemDate = $(row).children()[1];
-            console.log("Start: " + rowItemDate.children[0].data)
+            //console.log("Start: " + rowItemDate.children[0].data)
 
             /// Schedule row item number
             const rowItemCouple = $(row).children()[2];
-            console.log("Couple: " + $(rowItemCouple.children).text().split('Дистанційно')[1])
+            //console.log("Couple: " + $(rowItemCouple.children).text().split('Дистанційно')[1])
 
             let couple = {};
             couple.coupeNumber = rowItemNumber.children[0].data;
@@ -89,14 +87,14 @@ class ScheduleController {
         return couplesList;
     }
 
+    /// Convert from dd.mm.yyyy hh.mm.ss to Date format. Notify that month starts from 0.
     _strToDate = (dtStr) => {
-    if (!dtStr) return null
-    let dateParts = dtStr.split(".");
-    let timeParts = dateParts[2].split(" ")[1].split(":");
-    dateParts[2] = dateParts[2].split(" ")[0];
-    // month is 0-based, that's why we need dataParts[1] - 1
-    return new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0], timeParts[0], timeParts[1], timeParts[2]);
-}
+        if (!dtStr) return null
+        let date = dtStr.split(' ');
+        let dateParts = date[0].split('.');
+        let timeParts = date[1];
+        return new Date(`${dateParts[1]}/${dateParts[0]}/${dateParts[2]} ${timeParts}`);
+    }
 
 }
 
