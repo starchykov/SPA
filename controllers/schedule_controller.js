@@ -25,7 +25,7 @@ class ScheduleController {
             const inputDate = this._strToDate(`${el.coupleDate} ${el.coupleTime}:00`);
             const date = new Date(inputDate);
             events.push({
-                uid: el.coupeNumber + el.coupleTime,
+                uid: `${el.coupeNumber + date.toISOString()}`,
                 title: el.coupleDescription,
                 description: el.coupleDescription,
                 location: 'V. N. Karazin Kharkiv National University, Kharkiv, UA',
@@ -33,7 +33,7 @@ class ScheduleController {
                 geo: {lat: 37.774703, lon: -122.432642, radius: 20},
                 categories: ['event'],
                 start: [date.getFullYear(), date.getMonth(), date.getDay(), date.getHours(), date.getMinutes()],
-                duration: {hours: 1, minutes: 30},
+                duration: {hours: 1, minutes: 20},
                 status: 'CONFIRMED',
                 sequence: 1,
                 productId: 'GENERATOR',
