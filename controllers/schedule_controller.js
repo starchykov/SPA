@@ -22,36 +22,43 @@ class ScheduleController {
 
         let events = [];
         data.forEach((el) => {
+            let zoomLink;
             const eDate = this._strToDate(`${el.coupleDate} ${el.coupleTime}:00`);
+
+            if (el.coupleDescription.includes('Чеканова')) zoomLink = 'https://us04web.zoom.us/j/3229302405?pwd=Z2xTWTFLTmJGeFM2OFZEMUM5Q0pFQT09';
+            if (el.coupleDescription.includes('Макарова')) zoomLink = 'https://us05web.zoom.us/j/85918007179?pwd=Q2RKdTNkNE9TZUZLaXFVOWo3TkVMZz09';
+            if (el.coupleDescription.includes('Семенченко')) zoomLink = 'https://us02web.zoom.us/j/8720394866?pwd=eTdVbVpwZWQwelZnNEtwMzlHYkdJQT09';
+            if (el.coupleDescription.includes('Філатова')) zoomLink = 'https://us04web.zoom.us/j/75485462349?pwd=975DZwH1mMQstdY3fP2p1inE86QUYG.1#success';
+            if (el.coupleDescription.includes('Тарасенко')) zoomLink = 'https://us04web.zoom.us/j/4111878979?pwd=TjIyMFFVUjZzelZPU0ZQTmp3RjJGZz09';
 
             events.push({
                 uid: `${el.coupeNumber + eDate.toISOString()}`,
                 title: el.coupleDescription,
                 description: el.coupleDescription,
                 location: 'V. N. Karazin Kharkiv National University, Kharkiv, UA',
-                url: 'https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700&group=5750',
+                url: zoomLink,
                 geo: {lat: 50.00422968362318, lon: 36.22794578825089, radius: 100},
                 categories: ['event'],
                 start: [eDate.getFullYear(), eDate.getMonth() + 1, eDate.getDate(), eDate.getHours(), eDate.getMinutes()],
                 duration: {hours: 1, minutes: 20},
                 status: 'CONFIRMED',
                 productId: 'GENERATOR',
-            })
+            });
         });
 
         const getIcs = feedUrl => generateIcs('TITLE', events, feedUrl)
 
-        response.header({'content-type': 'text/calendar'})
-        response.status(200)
+        response.header({'content-type': 'text/calendar'});
+        response.status(200);
         response.send(getIcs());
     }
 
     _parseSchedulePage = async (url) => {
         const couplesList = [];
 
-        const response = await axios.get(url, {responseType: "arraybuffer"})
+        const response = await axios.get(url, {responseType: "arraybuffer"});
 
-        const html = iconv.decode(response.data, "win1251")
+        const html = iconv.decode(response.data, "win1251");
 
         const $ = cheerio.load(html);
 
