@@ -44,7 +44,7 @@ class ScheduleController {
 
         response.header({'content-type': 'text/calendar'})
         response.status(200)
-        response.json(getIcs());
+        response.send(getIcs());
     }
 
     _parseSchedulePage = async (url) => {
