@@ -30,9 +30,9 @@ class ScheduleController {
                 description: el.coupleDescription,
                 location: 'V. N. Karazin Kharkiv National University, Kharkiv, UA',
                 url: 'https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700&group=5750',
-                geo: {lat: 37.774703, lon: -122.432642, radius: 20},
+                geo: {lat: 50.00422968362318, lon: 36.22794578825089, radius: 100},
                 categories: ['event'],
-                start: [eDate.getFullYear(), eDate.getMonth() + 1, eDate.getDate(), eDate.getHours() + 2, eDate.getMinutes()],
+                start: [eDate.getFullYear(), eDate.getMonth() + 1, eDate.getDate(), eDate.getHours(), eDate.getMinutes()],
                 duration: {hours: 1, minutes: 20},
                 status: 'CONFIRMED',
                 productId: 'GENERATOR',
@@ -94,7 +94,7 @@ class ScheduleController {
         let date = dtStr.split(' ');
         let dateParts = date[0].split('.');
         let timeParts = date[1];
-        return new Date(`${dateParts[1]}/${dateParts[0]}/${dateParts[2]} ${timeParts} GMT-0200`);
+        return new Date(`${dateParts[1]}/${dateParts[0]}/${dateParts[2]} ${timeParts} GMT+0200`);
     }
 
 }
