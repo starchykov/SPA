@@ -22,6 +22,7 @@ const postsRoute = require('./routes/posts_route')
 const usersRouter = require('./routes/users_route')
 const imageRouter = require('./routes/images_route')
 const socketRouter = require('./routes/socket_route')
+const studyRouter = require('./routes/schedule_route')
 
 // Application Route Middleware
 app.use('/users', usersRouter)
@@ -29,6 +30,7 @@ app.use('/posts', postsRoute)
 app.use('/images', imageRouter)
 app.use('/uploads', express.static('uploads'))
 app.use('/socket', socketRouter)
+app.use('/study', studyRouter)
 
 // Middleware for errors catching
 app.use(errorMiddleware)
