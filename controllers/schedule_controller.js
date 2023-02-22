@@ -94,7 +94,7 @@ class ScheduleController {
         let date = dtStr.split(' ');
         let dateParts = date[0].split('.');
         let timeParts = date[1];
-        return new Date(`${dateParts[1]}/${dateParts[0]}/${dateParts[2]} ${timeParts} GMT+0200`);
+        return new Date(`${dateParts[1]}/${dateParts[0]}/${dateParts[2]} ${timeParts} GMT-0200`);
     }
 
 }
