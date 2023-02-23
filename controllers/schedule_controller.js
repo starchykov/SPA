@@ -46,7 +46,7 @@ class ScheduleController {
             });
         });
 
-        const getIcs = feedUrl => generateIcs('TITLE', events, feedUrl)
+        const getIcs = feedUrl => generateIcs('Schedule AK-11M', events, feedUrl)
 
         response.header({'content-type': 'text/calendar'});
         response.status(200);
@@ -66,22 +66,18 @@ class ScheduleController {
 
             /// Schedule date
             const date = $(elem).closest('div.col-md-6').find('h4').text().split(' ')[0];
-            //console.log("Couple data: " + date)
 
             /// Schedule row
             const row = $(elem).closest('tr');
 
             /// Schedule row item number
             const rowItemNumber = $(row).children()[0];
-            //console.log("Couple number: " + rowItemNumber.children[0].data)
 
             /// Schedule row item number
             const rowItemDate = $(row).children()[1];
-            //console.log("Start: " + rowItemDate.children[0].data)
 
             /// Schedule row item number
             const rowItemCouple = $(row).children()[2];
-            //console.log("Couple: " + $(rowItemCouple.children).text().split('Дистанційно')[1])
 
             let couple = {};
             couple.coupeNumber = rowItemNumber.children[0].data;
