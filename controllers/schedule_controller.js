@@ -25,6 +25,7 @@ class ScheduleController {
             let zoomLink;
             const eDate = this._strToDate(`${el.coupleDate} ${el.coupleTime}:00`);
 
+            if(el.coupleDescription.length === 0) return;
             if (el.coupleDescription.includes('Чеканова')) zoomLink = 'https://us04web.zoom.us/j/3229302405?pwd=Z2xTWTFLTmJGeFM2OFZEMUM5Q0pFQT09';
             if (el.coupleDescription.includes('Макарова')) zoomLink = 'https://us05web.zoom.us/j/85918007179?pwd=Q2RKdTNkNE9TZUZLaXFVOWo3TkVMZz09';
             if (el.coupleDescription.includes('Семенченко')) zoomLink = 'https://us02web.zoom.us/j/8720394866?pwd=eTdVbVpwZWQwelZnNEtwMzlHYkdJQT09';
@@ -62,8 +63,6 @@ class ScheduleController {
 
         const $ = cheerio.load(html);
 
-
-
         $('.table').each(function (i, elem) {
 
             /// Schedule date
@@ -74,9 +73,9 @@ class ScheduleController {
 
             const tableRows = scheduleTable.children();
 
-            let couple = {};
 
             $(tableRows).each(function (i, row) {
+                let couple = {};
                 /// Schedule row item number
                 const rowItemNumber = $(row).children()[0];
                 /// Schedule row item number
@@ -99,7 +98,6 @@ class ScheduleController {
 
     /// Convert from dd.mm.yyyy hh.mm.ss to Date format. Notify that month starts from 0.
     _strToDate = (dtStr) => {
-        console.log(dtStr);
         if (!dtStr) return null
         let date = dtStr.split(' ');
         let dateParts = date[0].split('.');
