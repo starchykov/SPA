@@ -87,7 +87,7 @@ class ScheduleController {
                 couple.coupeNumber = rowItemNumber.children[0].data;
                 couple.coupleDate = date;
                 couple.coupleTime = rowItemDate.children[0].data;
-                couple.coupleDescription = $(rowItemCouple.children).text();
+                couple.coupleDescription = $(rowItemCouple.children).text().trim();
                 couplesList.push(couple);
             });
 
