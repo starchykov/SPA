@@ -62,30 +62,36 @@ class ScheduleController {
 
         const $ = cheerio.load(html);
 
-        $('.remote_work').each(function (i, elem) {
+
+
+        $('.table').each(function (i, elem) {
 
             /// Schedule date
             const date = $(elem).closest('div.col-md-6').find('h4').text().split(' ')[0];
 
             /// Schedule row
-            const row = $(elem).closest('tr');
+            const scheduleTable = $(elem).children();
 
-            /// Schedule row item number
-            const rowItemNumber = $(row).children()[0];
-
-            /// Schedule row item number
-            const rowItemDate = $(row).children()[1];
-
-            /// Schedule row item number
-            const rowItemCouple = $(row).children()[2];
+            const tableRows = scheduleTable.children();
 
             let couple = {};
-            couple.coupeNumber = rowItemNumber.children[0].data;
-            couple.coupleDate = date;
-            couple.coupleTime = rowItemDate.children[0].data;
-            couple.coupleDescription = $(rowItemCouple.children).text().split('Дистанційно')[1];
 
-            couplesList.push(couple);
+            $(tableRows).each(function (i, row) {
+                /// Schedule row item number
+                const rowItemNumber = $(row).children()[0];
+                /// Schedule row item number
+                const rowItemDate = $(row).children()[1];
+                /// Schedule row item number
+                const rowItemCouple = $(row).children()[2];
+
+                /// Set values to the DTO
+                couple.coupeNumber = rowItemNumber.children[0].data;
+                couple.coupleDate = date;
+                couple.coupleTime = rowItemDate.children[0].data;
+                couple.coupleDescription = $(rowItemCouple.children).text();
+                couplesList.push(couple);
+            });
+
         });
 
         return couplesList;
@@ -93,6 +99,7 @@ class ScheduleController {
 
     /// Convert from dd.mm.yyyy hh.mm.ss to Date format. Notify that month starts from 0.
     _strToDate = (dtStr) => {
+        console.log(dtStr);
         if (!dtStr) return null
         let date = dtStr.split(' ');
         let dateParts = date[0].split('.');
