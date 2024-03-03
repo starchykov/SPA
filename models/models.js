@@ -5,7 +5,7 @@ const Users = Sequelize.define('Users', {
     id: {type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false},
     name: {type: DataTypes.STRING},
     email: {type: DataTypes.STRING, unique: true},
-    password: {type: DataTypes.STRING,},
+    password: {type: DataTypes.STRING},
     refreshToken: {type: DataTypes.STRING, unique: true},
     activationLink: {type: DataTypes.STRING},
     isActivated: {type: DataTypes.BOOLEAN},
@@ -23,6 +23,6 @@ const Posts = Sequelize.define('Posts', {
     userId: {type: DataTypes.INTEGER, allowNull: true},
     createdAt: {type: DataTypes.DATE, allowNull: false},
     updatedAt: {type: DataTypes.DATE, allowNull: false},
-}, {timestamps: true})
+}, {timestamps: true});
 
-module.exports = {Users, Posts}
+module.exports = {Users, Posts};

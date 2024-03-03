@@ -43,8 +43,9 @@ class UserService {
 
     // Try to login user
     async login(email, password) {
+        if (!email || !password) throw ApiError.BadRequest('Invalid credentials');
         // Search user in database wia email from the request
-        const user = await Users.findOne({where: {email: email}});
+        const user = await Users.findOne({where: {email: email}}).catch(error => console.log(error));
         // If user doesn't signed up throw error
         if (!user) throw ApiError.BadRequest('There is no user with such email');
         // If user is signed up compare password from the request with database password

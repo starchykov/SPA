@@ -25,7 +25,7 @@ class ScheduleController {
             let zoomLink;
             const eDate = this._strToDate(`${el.coupleDate} ${el.coupleTime}:00`);
 
-            if(el.coupleDescription.length === 0) return;
+            if (el.coupleDescription.length === 0) return;
             if (el.coupleDescription.includes('Чеканова')) zoomLink = 'https://us04web.zoom.us/j/3229302405?pwd=Z2xTWTFLTmJGeFM2OFZEMUM5Q0pFQT09';
             if (el.coupleDescription.includes('Макарова')) zoomLink = 'https://us05web.zoom.us/j/85918007179?pwd=Q2RKdTNkNE9TZUZLaXFVOWo3TkVMZz09';
             if (el.coupleDescription.includes('Семенченко')) zoomLink = 'https://us02web.zoom.us/j/8720394866?pwd=eTdVbVpwZWQwelZnNEtwMzlHYkdJQT09';
