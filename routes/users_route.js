@@ -12,6 +12,8 @@ router.post('/login', UserController.logIn);
 router.get('/refresh', UserController.refresh);
 router.get('/logout', UserController.logout);
 router.get('/activation/:link', UserController.activation)
+
+router.get('/friends', checkAuthMiddleware, UserController.getUserFriends);
 router.post('/add-friend', checkAuthMiddleware, UserController.addToFriends);
 router.post('/remove-friend', checkAuthMiddleware, UserController.removeFromFriends);
 

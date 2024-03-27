@@ -65,6 +65,37 @@ class UserController {
         }).catch(error => next(error))
     }
 
+    async getUserFriends(req, res, next) {
+        const userId = req.user.id; // Assuming you can identify the user from the request
+
+        try {
+            const contacts = await Contacts.findAll({
+                where: { userId: userId },
+                attributes: ['contactUserId']
+            });
+
+            const friendsDetailsPromises = contacts.map(async contact => {
+                return await Users.findByPk(contact.contactUserId, {
+                    attributes: ['id', 'name', 'email'] // Customize as needed
+                });
+            });
+
+            const friendsDetails = await Promise.all(friendsDetailsPromises);
+
+            const friendList = friendsDetails.map(friend => {
+                return {
+                    id: friend.id,
+                    name: friend.name,
+                    email: friend.email
+                };
+            });
+
+            res.json(friendList);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     // Add to friends function
     async addToFriends(request, response, next) {
         const userId = request.user.id; // Assuming you have a way to get the current user's ID
