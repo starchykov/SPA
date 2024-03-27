@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 // Define Application routes middleware
 const postsRoute = require('./routes/posts_route')
 const usersRouter = require('./routes/users_route')
+const chatsRouter = require('./routes/chats_route')
 const imageRouter = require('./routes/images_route')
 const socketRouter = require('./routes/socket_route')
 const studyRouter = require('./routes/schedule_route')
@@ -27,6 +28,7 @@ const studyRouter = require('./routes/schedule_route')
 // Application Route Middleware
 app.use('/users', usersRouter)
 app.use('/posts', postsRoute)
+app.use('/chats', chatsRouter)
 app.use('/images', imageRouter)
 app.use('/uploads', express.static('uploads'))
 app.use('/socket', socketRouter)
