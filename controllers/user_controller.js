@@ -64,6 +64,42 @@ class UserController {
             response.clearCookie('refreshToken').status(200).json(result)
         }).catch(error => next(error))
     }
+
+    // Add to friends function
+    async addToFriends(request, response, next) {
+        const userId = request.user.id; // Assuming you have a way to get the current user's ID
+        const {contactUserId} = request.body; // The ID of the user to add as a contact
+
+        try {
+            const existingContact = await Contacts.findOne({where: {userId, contactUserId}});
+            if (existingContact) {
+                return response.status(409).json({message: "This user is already your friend."});
+            }
+
+            const newContact = await Contacts.create({userId, contactUserId});
+            return response.status(201).json(newContact);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    // Remove from friends function
+    async removeFromFriends(request, response, next) {
+        const userId = request.user.id; // Current user's ID
+        const {contactUserId} = request.body; // The ID of the friend to remove
+
+        try {
+            const deleted = await Contacts.destroy({where: {userId, contactUserId}});
+            if (deleted) {
+                return response.status(200).json({message: "Friend removed successfully."});
+            } else {
+                return response.status(404).json({message: "Friend not found."});
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
 }
+
 
 module.exports = new UserController();

@@ -33,7 +33,7 @@ save = (req, res) => {
 
     Posts.create(newPost).then(result => {
         res.status(201).json({
-            message: "post created successful",
+            message: "Post created successful",
             post: result
         })
     }).catch(err => {
@@ -89,7 +89,7 @@ update = (req, res) => {
 
     Posts.update(updatedPost, {where: {id: id, userId: userId}}).then(result => {
         res.status(201).json({
-            message: "post updated successful",
+            message: "Post updated successful",
             post: updatedPost
         })
     }).catch(err => {
@@ -105,7 +105,7 @@ destroy = (req, res) => {
     const userId = 1;
     Posts.destroy({where: {id: id, userId: userId}}).then(result => {
         res.status(201).json({
-            message: "post deleted successful",
+            message: "Post deleted successful",
             post: result
         })
     }).catch(err => {
