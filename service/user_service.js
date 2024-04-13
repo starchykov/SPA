@@ -100,7 +100,7 @@ class UserService {
     async getUserFriends(userId) {
         try {
             const contacts = await Contacts.findAll({
-                where: { userId: userId },
+                where: {userId: userId},
                 attributes: ['contactUserId']
             });
 
@@ -124,17 +124,25 @@ class UserService {
     }
 
     // Add to friends
-    async addToFriends(userId, contactUserId) {
+    async addToFriends(userId, contactUserEmail) {
         try {
+            // Find the contact user by email
+            const contactUser = await Users.findOne({where: {email: contactUserEmail}});
+            if (!contactUser) {
+                throw ApiError.NotFound("User with provided email does not exist.");
+            }
+
+            // Check if the friendship already exists
             const existingContact = await Contacts.findOne({
-                where: { userId, contactUserId }
+                where: {userId, contactUserId: contactUser.id}
             });
 
             if (existingContact) {
                 throw ApiError.BadRequest("This user is already your friend.");
             }
 
-            const newContact = await Contacts.create({ userId, contactUserId });
+            // Create the new contact entry
+            const newContact = await Contacts.create({userId, contactUserId: contactUser.id});
             return newContact;
         } catch (error) {
             console.error(error);
@@ -146,11 +154,11 @@ class UserService {
     async removeFromFriends(userId, contactUserId) {
         try {
             const deleted = await Contacts.destroy({
-                where: { userId, contactUserId }
+                where: {userId, contactUserId}
             });
 
             if (deleted) {
-                return { message: "Friend removed successfully." };
+                return {message: "Friend removed successfully."};
             } else {
                 throw ApiError.NotFound("Friend not found.");
             }

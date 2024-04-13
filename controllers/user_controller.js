@@ -80,10 +80,11 @@ class UserController {
     // Add to friends
     async addToFriends(request, response, next) {
         const userId = request.user.id;
-        const {contactUserId} = request.body;
+        const { contactUserEmail } = request.body;
+        console.log(contactUserEmail);
 
         try {
-            const newContact = await userService.addToFriends(userId, contactUserId);
+            const newContact = await userService.addToFriends(userId, contactUserEmail);
             response.status(201).json(newContact);
         } catch (error) {
             next(error);
