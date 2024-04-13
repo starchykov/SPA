@@ -1,4 +1,4 @@
-const {Users} = require('../models/models')
+const {Contacts, Users} = require('../models/models')
 const bcrypt = require('bcrypt')
 const uuid = require('uuid')
 const mailService = require('../service/mail_service')
@@ -95,6 +95,71 @@ class UserService {
         // Return deleted token as a result
         return {deletedToken: refreshToken}
     }
+
+    // Get user's friends
+    async getUserFriends(userId) {
+        try {
+            const contacts = await Contacts.findAll({
+                where: { userId: userId },
+                attributes: ['contactUserId']
+            });
+
+            const friendsDetailsPromises = contacts.map(async contact => {
+                return await Users.findByPk(contact.contactUserId, {
+                    attributes: ['id', 'name', 'email']
+                });
+            });
+
+            const friendsDetails = await Promise.all(friendsDetailsPromises);
+
+            return friendsDetails.map(friend => ({
+                id: friend.id,
+                name: friend.name,
+                email: friend.email
+            }));
+        } catch (error) {
+            console.error(error);
+            throw ApiError.Internal('Failed to retrieve user friends');
+        }
+    }
+
+    // Add to friends
+    async addToFriends(userId, contactUserId) {
+        try {
+            const existingContact = await Contacts.findOne({
+                where: { userId, contactUserId }
+            });
+
+            if (existingContact) {
+                throw ApiError.BadRequest("This user is already your friend.");
+            }
+
+            const newContact = await Contacts.create({ userId, contactUserId });
+            return newContact;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    // Remove from friends
+    async removeFromFriends(userId, contactUserId) {
+        try {
+            const deleted = await Contacts.destroy({
+                where: { userId, contactUserId }
+            });
+
+            if (deleted) {
+                return { message: "Friend removed successfully." };
+            } else {
+                throw ApiError.NotFound("Friend not found.");
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
 }
 
 module.exports = new UserService();

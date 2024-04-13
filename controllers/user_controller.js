@@ -65,67 +65,39 @@ class UserController {
         }).catch(error => next(error))
     }
 
-    async getUserFriends(req, res, next) {
-        const userId = req.user.id; // Assuming you can identify the user from the request
+    // Get user friends
+    async getUserFriends(request, response, next) {
+        const userId = request.user.id;
 
         try {
-            const contacts = await Contacts.findAll({
-                where: { userId: userId },
-                attributes: ['contactUserId']
-            });
-
-            const friendsDetailsPromises = contacts.map(async contact => {
-                return await Users.findByPk(contact.contactUserId, {
-                    attributes: ['id', 'name', 'email'] // Customize as needed
-                });
-            });
-
-            const friendsDetails = await Promise.all(friendsDetailsPromises);
-
-            const friendList = friendsDetails.map(friend => {
-                return {
-                    id: friend.id,
-                    name: friend.name,
-                    email: friend.email
-                };
-            });
-
-            res.json(friendList);
+            const friendsList = await userService.getUserFriends(userId);
+            response.json(friendsList);
         } catch (error) {
             next(error);
         }
     }
 
-    // Add to friends function
+    // Add to friends
     async addToFriends(request, response, next) {
-        const userId = request.user.id; // Assuming you have a way to get the current user's ID
-        const {contactUserId} = request.body; // The ID of the user to add as a contact
+        const userId = request.user.id;
+        const {contactUserId} = request.body;
 
         try {
-            const existingContact = await Contacts.findOne({where: {userId, contactUserId}});
-            if (existingContact) {
-                return response.status(409).json({message: "This user is already your friend."});
-            }
-
-            const newContact = await Contacts.create({userId, contactUserId});
-            return response.status(201).json(newContact);
+            const newContact = await userService.addToFriends(userId, contactUserId);
+            response.status(201).json(newContact);
         } catch (error) {
             next(error);
         }
     }
 
-    // Remove from friends function
+    // Remove from friends
     async removeFromFriends(request, response, next) {
-        const userId = request.user.id; // Current user's ID
-        const {contactUserId} = request.body; // The ID of the friend to remove
+        const userId = request.user.id;
+        const {contactUserId} = request.body;
 
         try {
-            const deleted = await Contacts.destroy({where: {userId, contactUserId}});
-            if (deleted) {
-                return response.status(200).json({message: "Friend removed successfully."});
-            } else {
-                return response.status(404).json({message: "Friend not found."});
-            }
+            const result = await userService.removeFromFriends(userId, contactUserId);
+            response.status(200).json(result);
         } catch (error) {
             next(error);
         }
