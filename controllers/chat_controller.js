@@ -1,13 +1,26 @@
-const {Chats} = require('../models/models') // Adjust as necessary
+const {Chats, ChatsParticipants} = require('../models/models') // Adjust as necessary
 const Validator = require('fastest-validator')
 
-const index = (req, res) => {
-    Chats.findAll().then(result => {
-        res.status(200).json(result)
-    }).catch(err => {
-        res.status(500).json(err)
-    })
-}
+const index = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const chats = await Chats.findAll({
+            include: [{
+                model: ChatsParticipants,
+                as: 'Participants',
+                where: { userId: userId },
+                attributes: ['id', 'userId', 'createdAt']
+            }]
+        });
+
+        res.status(200).json(chats);
+    } catch (err) {
+        console.error("Error fetching chats:", err);
+        res.status(500).json({
+            message: "Unable to retrieve chats due to internal server error"
+        });
+    }
+};
 
 const show = (req, res) => {
     const id = req.params.id
@@ -18,39 +31,48 @@ const show = (req, res) => {
     })
 }
 
-const save = (req, res) => {
+const save = async (req, res) => {
     const newChat = {
-        message: req.body.message,
-        userId: req.user.id, // Assuming a similar authentication setup
-        chatRoomId: Number(req.body.chatRoomId) // If applicable
-    }
+        userId: req.user.id,
+        title: req.body.title,
+        description: req.body.description
+    };
 
     const scheme = {
-        message: {type: 'string', optional: false, max: '500'},
-        chatRoomId: {type: 'number', optional: true}, // Adjust validation as necessary
-    }
+        title: {type: 'string', optional: false, max: '50'},
+        description: {type: 'string', optional: true, max: '200'},
+    };
 
     const validator = new Validator();
-
-    if (validator.validate(newChat, scheme) !== true) {
+    const validationResult = validator.validate(newChat, scheme);
+    if (validationResult !== true) {
         return res.status(400).json({
             message: 'Validation failed',
-            errors: validator.validate(newChat, scheme)
-        })
+            errors: validationResult
+        });
     }
 
-    Chats.create(newChat).then(result => {
+    try {
+        // Create the chat
+        const chat = await Chats.create(newChat);
+
+        // Add current user as a participant of the newly created chat
+        await ChatsParticipants.create({
+            chatId: chat.id,
+            userId: req.user.id
+        });
+
         res.status(201).json({
-            message: "Chat created successfully",
-            chat: result
-        })
-    }).catch(err => {
+            message: "Chat created successfully and user added to chat",
+            chat: chat
+        });
+    } catch (err) {
+        console.error("Error during chat creation or adding participant:", err);
         res.status(500).json({
-            message: "Something went wrong",
-            error: err
-        })
-    })
-}
+            message: "Unable to complete operation due to internal server error"
+        });
+    }
+};
 
 const update = (req, res) => {
     const id = req.params.id

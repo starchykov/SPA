@@ -59,4 +59,42 @@ const Messages = Sequelize.define('Messages', {
     updatedAt: {type: DataTypes.DATE, allowNull: false},
 }, {timestamps: true});
 
+// Chats can have many Users through ChatsParticipants
+Chats.belongsToMany(Users, {
+    through: ChatsParticipants,
+    foreignKey: 'chatId',
+    otherKey: 'userId'
+});
+
+// Users can have many Chats through ChatsParticipants
+Users.belongsToMany(Chats, {
+    through: ChatsParticipants,
+    foreignKey: 'userId',
+    otherKey: 'chatId'
+});
+
+// Additionally, define the inverse of these many-to-many relations
+// which are technically optional but useful for bidirectional access:
+
+ChatsParticipants.belongsTo(Chats, {
+    foreignKey: 'chatId',
+    as: 'Chat'
+});
+
+ChatsParticipants.belongsTo(Users, {
+    foreignKey: 'userId',
+    as: 'User'
+});
+
+Chats.hasMany(ChatsParticipants, {
+    foreignKey: 'chatId',
+    as: 'Participants'
+});
+
+Users.hasMany(ChatsParticipants, {
+    foreignKey: 'userId',
+    as: 'Participations'
+});
+
+
 module.exports = {Users, Posts, Contacts, Chats, ChatsParticipants, Messages};
